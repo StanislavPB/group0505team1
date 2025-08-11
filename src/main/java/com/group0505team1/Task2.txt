@@ -18,18 +18,22 @@
 
 Entity:
 
+Enums:
+-UserRole (ADMIN, USER)
+-TaskStatus (TO_DO, IN_PROCESS, DONE)
+
 -User
     int id
     String name
     String password
-    Enum role
+    UserRole role
     List<Task> userTasks
 
 -Task
     int id
     String title
     String descriptin
-    boolean status
+    TaskStatus status
     int priority
     LocalDate deadline
     int projectId
