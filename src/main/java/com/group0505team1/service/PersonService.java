@@ -11,4 +11,8 @@ public class PersonService {
     int counter = 0;
 
 
+    public List<Person> getPersonList() {
+        return personList;
+    }
+
 }
