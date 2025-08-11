@@ -7,4 +7,7 @@ import java.util.List;
 
 public class PersonService {
     List<Person> personList = new ArrayList<>();
+    public List<Person> getPersonList() {
+        return personList;
+    }
 }
