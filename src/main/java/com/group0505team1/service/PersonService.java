@@ -7,4 +7,8 @@ import java.util.List;
 
 public class PersonService {
     List<Person> personList = new ArrayList<>();
+
+    int counter = 0;
+
+
 }
