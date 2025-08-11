@@ -44,6 +44,7 @@ Entity:
     int projectId
     String title
     String description
+    boolean status
     List<User> users
     List<Task> tasks
     Map<TaskID, Map<Date, String>> projectChat
@@ -64,6 +65,7 @@ ____________________________________________________________
     Меню задачи
     - Показать все комменты к задаче
     - Оставить комментарий к задаче
+    - Удалить свой комментарий
     - Изменить статус задачи
     - Выход
 
@@ -90,9 +92,8 @@ Users:
 - auth
 - getUserById
 - getUserByName
-- getActiveTasks
+- getTasksByFilter (Active, inactive, priority)
 - getAllUserTasks
-- sendMessage
 
 Tasks:
 - addTask
@@ -102,5 +103,11 @@ Tasks:
 - assignUserToTask
 
 Project:
--
+- addProject
+- setStatus
+- getAllProject
 
+
+Messages:
+- sendMessageToUser
+- getMessagesByUserId
