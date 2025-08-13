@@ -4,7 +4,7 @@ import com.group0505team1.entity.Project;
 
 import java.util.List;
 
-public interface ProjectRepository {
+public interface ProjectInterface {
     void addProject(Project project);
     void setStatus(int projectId, boolean status);
     Project findByID(int id);

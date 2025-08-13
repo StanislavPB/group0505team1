@@ -1,41 +1,40 @@
 package com.group0505team1.services;
 
 import com.group0505team1.dto.RegistrationResult;
-import com.group0505team1.entity.Role;
+import com.group0505team1.entity.RoleUSer;
 import com.group0505team1.entity.Task;
 import com.group0505team1.entity.TaskStatus;
 import com.group0505team1.entity.User;
 import com.group0505team1.exception.AuthenticationException;
 import com.group0505team1.exception.UserAlreadyExistsException;
 import com.group0505team1.exception.UserNotFoundException;
-import com.group0505team1.repository.TaskRepository;
-import com.group0505team1.repository.UserRepository;
+import com.group0505team1.repository.TaskInterface;
+import com.group0505team1.repository.UserInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class UserService {
-    private final UserRepository userRepository;
-    private final TaskRepository taskRepository;
+    private final UserInterface userInterface;
+    private final TaskInterface taskInterface;
 
-    public UserService(UserRepository userRepository, TaskRepository taskRepository) {
-        this.userRepository = userRepository;
-        this.taskRepository = taskRepository;
+    public UserService(UserInterface userInterface, TaskInterface taskInterface) {
+        this.userInterface = userInterface;
+        this.taskInterface = taskInterface;
     }
 
-    public RegistrationResult register(String name, String password, Role role) {
-        if (userRepository.findByName(name) != null) {
+    public RegistrationResult register(String name, String password, RoleUSer roleUSer) {
+        if (userInterface.findByName(name) != null) {
             throw new UserAlreadyExistsException("Пользователь с таким именем уже существует");
         }
-        User user = new User(name, password, role, new ArrayList<>());
-        userRepository.save(user);
+        User user = new User(name, password, roleUSer);
+        userInterface.save(user);
         return new RegistrationResult(true, "Регистраия прошла успешно!");
     }
 
     public User auth(String name, String password) {
-        User user = userRepository.findByName(name);
+        User user = userInterface.findByName(name);
         if (user == null) {
             throw new AuthenticationException("Пользователь не найден");
         }
@@ -46,19 +45,19 @@ public class UserService {
     }
 
     public User findUserById(int id) {
-        return Optional.ofNullable(userRepository.findById(id))
+        return Optional.ofNullable(userInterface.findById(id))
                 .orElseThrow(() -> new UserNotFoundException("Пользователь с ID : " + id + " не найден!"));
     }
 
 
     public User findByName(String name) {
-        return Optional.ofNullable(userRepository.findByName(name))
+        return Optional.ofNullable(userInterface.findByName(name))
                 .orElseThrow(() -> new UserNotFoundException("Пользователь с именем '" + name + "' не найден!"));
     }
 
     public List<Task> getAllUserTasks(String name) {
         User user = findByName(name);
-        return taskRepository.findByUserId(user.getId());
+        return taskInterface.findByUserId(user.getId());
     }
 
     //    public List<Task> getTasksByFilter(int userId, TaskStatus statusFilter, Integer priority) {
