@@ -7,14 +7,14 @@ public class User {
     private int counter = 0;
     private int id;
     private String name;
-    private String password;
-    private RoleUSer roleUSer;
+    private String passwordHash;
+    private RoleUser roleUSer;
     private List<Task> userTasks; //хранить только ID задач
 
-    public User(String name, String password, RoleUSer roleUSer) {
+    public User(String name, String passwordHash, RoleUser roleUSer) {
         this.id = ++counter;
         this.name = name;
-        this.password = password;
+        this.passwordHash = passwordHash;
         this.roleUSer = roleUSer;
         this.userTasks = new ArrayList<>();
     }
@@ -30,10 +30,10 @@ public class User {
     }
 
     public String getPassword() {
-        return password;
+        return passwordHash;
     }
 
-    public RoleUSer getRole() {
+    public RoleUser getRole() {
         return roleUSer;
     }
 

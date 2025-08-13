@@ -1,7 +1,7 @@
 package com.group0505team1.services;
 
 import com.group0505team1.dto.RegistrationResult;
-import com.group0505team1.entity.RoleUSer;
+import com.group0505team1.entity.RoleUser;
 import com.group0505team1.entity.Task;
 import com.group0505team1.entity.TaskStatus;
 import com.group0505team1.entity.User;
@@ -11,7 +11,6 @@ import com.group0505team1.exception.UserNotFoundException;
 import com.group0505team1.repository.TaskInterface;
 import com.group0505team1.repository.UserInterface;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +23,7 @@ public class UserService {
         this.taskInterface = taskInterface;
     }
 
-    public RegistrationResult register(String name, String password, RoleUSer roleUSer) {
+    public RegistrationResult register(String name, String password, RoleUser roleUSer) {
         if (userInterface.findByName(name) != null) {
             throw new UserAlreadyExistsException("Пользователь с таким именем уже существует");
         }

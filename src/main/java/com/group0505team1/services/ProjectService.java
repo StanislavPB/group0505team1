@@ -17,7 +17,7 @@ public class ProjectService {
     }
 
     public void addProject(String title, String description, List<User> users, List<Task> tasks, Map<Integer, Map<LocalDateTime, String>> projectChat){
-        Project project = new Project(title,description,users,tasks,projectChat );
+        Project project = new Project(title,description );
         projectInterface.addProject(project);
     }
 
