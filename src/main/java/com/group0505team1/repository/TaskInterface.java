@@ -5,7 +5,7 @@ import com.group0505team1.entity.Task;
 import java.util.List;
 import java.util.Optional;
 
-public interface TaskRepository {
+public interface TaskInterface {
 
     void save(Task task);
     Optional<Task> findById(int id);

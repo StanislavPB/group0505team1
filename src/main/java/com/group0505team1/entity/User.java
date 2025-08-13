@@ -1,23 +1,26 @@
 package com.group0505team1.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
-    private static int counter = 0;
+    private int counter = 0;
     private int id;
     private String name;
     private String password;
-    private Role role;
-    private List<Integer> userTasks; //хранить только ID задач
+    private RoleUSer roleUSer;
+    private List<Task> userTasks; //хранить только ID задач
 
-    public User( String name, String password, Role role, List<Integer> userTasks) {
+    public User(String name, String password, RoleUSer roleUSer) {
         this.id = ++counter;
         this.name = name;
         this.password = password;
-        this.role = role;
-        this.userTasks = userTasks;
+        this.roleUSer = roleUSer;
+        this.userTasks = new ArrayList<>();
     }
-
+    public void addTask(Task task) {
+        userTasks.add(task);
+    }
     public int getId() {
         return id;
     }
@@ -30,11 +33,11 @@ public class User {
         return password;
     }
 
-    public Role getRole() {
-        return role;
+    public RoleUSer getRole() {
+        return roleUSer;
     }
 
-    public List<Integer> getUserTasks() {
+    public List<Task> getUserTasks() {
         return userTasks;
     }
 
@@ -44,7 +47,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", role=" + role +
+                ", role=" + roleUSer +
                 ", tasks in process =  " +
                 tasksInfo +
                 '}';

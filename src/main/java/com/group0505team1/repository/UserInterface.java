@@ -4,7 +4,7 @@ import com.group0505team1.entity.User;
 
 import java.util.List;
 
-public interface UserRepository {
+public interface UserInterface {
     void save(User user);                     // Создать или обновить пользователя
     User findById(int id);                    // Найти пользователя по ID
     User findByName(String name);             // Найти пользователя по имени

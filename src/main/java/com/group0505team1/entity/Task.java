@@ -1,11 +1,10 @@
 package com.group0505team1.entity;
 
-
 import java.time.LocalDate;
 
 public class Task {
     private static int counter = 0;
-   private int id = 0;
+    private int id = 0;
     private String title;
     private String description;
     private TaskStatus status;
@@ -13,7 +12,7 @@ public class Task {
     private LocalDate deadline;
     private int projectId;
 
-    public Task( String title, String description, TaskStatus status, int priority, LocalDate deadline, int projectId) {
+    public Task(String title, String description, TaskStatus status, int priority, LocalDate deadline, int projectId) {
         this.id = ++counter;
         this.title = title;
         this.description = description;
@@ -34,10 +33,6 @@ public class Task {
     public String getDescription() {
         return description;
     }
-
-//    public TaskStatus isStatus() {
-//        return status;
-//    }
 
     public TaskStatus getStatus() {
         return status;
