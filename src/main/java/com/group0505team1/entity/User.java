@@ -8,14 +8,14 @@ public class User {
     private int id;
     private String name;
     private String passwordHash;
-    private RoleUser roleUSer;
+    private RoleUser roleUser;
     private List<Task> userTasks; //хранить только ID задач
 
-    public User(String name, String passwordHash, RoleUser roleUSer) {
+    public User(String name, String passwordHash, RoleUser roleUser) {
         this.id = ++counter;
         this.name = name;
         this.passwordHash = passwordHash;
-        this.roleUSer = roleUSer;
+        this.roleUser = roleUser;
         this.userTasks = new ArrayList<>();
     }
     public void addTask(Task task) {
@@ -34,7 +34,7 @@ public class User {
     }
 
     public RoleUser getRole() {
-        return roleUSer;
+        return roleUser;
     }
 
     public List<Task> getUserTasks() {
@@ -47,7 +47,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", role=" + roleUSer +
+                ", role=" + roleUser +
                 ", tasks in process =  " +
                 tasksInfo +
                 '}';

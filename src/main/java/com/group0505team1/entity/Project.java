@@ -21,6 +21,12 @@ public class Project {
         this.projectChat = new TreeMap<>();
     }
 
+    public void addTask(Task task) {
+        tasks.add(task);
+    }
+    public void addUser(User user) {
+        users.add(user);
+    }
     public int getProjectId() {
         return projectId;
     }
@@ -51,9 +57,9 @@ public class Project {
                 "projectId=" + projectId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", users=" + (users != null ? users.size() : 0) +
-                ", tasks=" + (tasks != null ? tasks.size() : 0) +
-                ", projectChat=" + (projectChat != null ? projectChat.size() : 0) +
+                ", users=" +  users.size()  +
+                ", tasks=" +  tasks.size()  +
+                ", projectChat=" +  projectChat.size() +
                 '}';
     }
 }
