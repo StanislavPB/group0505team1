@@ -8,9 +8,14 @@ import java.util.List;
 
 public interface ProjectRepositoryInterface {
     void add(Project project);
+
     Project findByID(int id);
+
     Project findByName(String name);
+
     List<Project> getAllProject();
-    boolean addUserToProject(User user);
-    boolean addTaskToProject(Task task);
+
+    boolean addUserToProject(int idProject, User user);
+
+    boolean addTaskToProject(int idProject, Task task);
 }

@@ -7,11 +7,11 @@ import com.group0505team1.entity.User;
 public interface UserRepositoryInterface {
     void add(User user);
 
-    void addTask(Task task);
+    void addTask(int userId,Task task);
 
     User findById(int id);
 
     User findByName(String name);
-    void setRole(RoleUser role);
+    void setRole(int userId, RoleUser role);
 
 }

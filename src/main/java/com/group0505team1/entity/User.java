@@ -37,6 +37,10 @@ public class User {
         return roleUser;
     }
 
+    public void setRoleUser(RoleUser roleUser) {
+        this.roleUser = roleUser;
+    }
+
     public List<Task> getUserTasks() {
         return userTasks;
     }
