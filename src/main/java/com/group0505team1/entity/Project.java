@@ -10,7 +10,6 @@ public class Project {
     private String description;
     private List<User> users;
     private List<Task> tasks;
-    private Map<Integer, Map<LocalDateTime, String>> projectChat;
 
     public Project(String title, String description) {
         this.projectId = ++counter;
@@ -18,7 +17,6 @@ public class Project {
         this.description = description;
         this.users = new ArrayList<>();
         this.tasks =new ArrayList<>();
-        this.projectChat = new TreeMap<>();
     }
 
     public void addTask(Task task) {
@@ -47,9 +45,7 @@ public class Project {
         return tasks;
     }
 
-    public Map<Integer, Map<LocalDateTime, String>> getProjectChat() {
-        return projectChat;
-    }
+
 
     @Override
     public String toString() {
@@ -59,7 +55,6 @@ public class Project {
                 ", description='" + description + '\'' +
                 ", users=" +  users.size()  +
                 ", tasks=" +  tasks.size()  +
-                ", projectChat=" +  projectChat.size() +
                 '}';
     }
 }
