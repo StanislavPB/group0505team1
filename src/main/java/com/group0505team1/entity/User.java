@@ -41,6 +41,10 @@ public class User {
         return userTasks;
     }
 
+    public void setRoleUser(RoleUser roleUser) {
+        this.roleUser = roleUser;
+    }
+
     @Override
     public String toString() {
         String tasksInfo = userTasks.isEmpty() ? "empty" : String.valueOf(userTasks.size());
