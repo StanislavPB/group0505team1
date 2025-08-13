@@ -3,7 +3,7 @@ package com.group0505team1.entity;
 import java.time.LocalDateTime;
 
 public class Message {
-    private static int counter = 0;
+    private int counter = 0;
     private int id;
     private String message;
     private int userIdSender;
@@ -11,12 +11,12 @@ public class Message {
     private LocalDateTime dateTime;
 
 
-    public Message(int id, String message, int userIdSender, int userIdReceiver, LocalDateTime dateTime) {
-        this.id = id;
+    public Message(String message, int userIdSender, int userIdReceiver) {
+        this.id = ++counter;
         this.message = message;
         this.userIdSender = userIdSender;
         this.userIdReceiver = userIdReceiver;
-        this.dateTime = dateTime;
+        this.dateTime = LocalDateTime.now();
     }
 
     public int getId() {
