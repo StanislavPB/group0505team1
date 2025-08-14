@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface MessageRepositoryInterface {
     void sendMessage(int userIdSender, int userIdReceiver, String message);
-    List<Message> getReceivedMessages();
-    List<Message> getSentMessages();
+    List<Message> getReceivedMessages(int idUser);
+    List<Message> getSentMessages(int idUser);
     List<Message> getAllMessages();
 }
