@@ -36,9 +36,20 @@ public class UserRepository implements UserRepositoryInterface {
     }
 
     @Override
-    public User findByName(String name) {
+    public List<User> findByName(String name) {
+        List<User> foundUsers = new ArrayList<>();
         for (User user : users) {
             if (user.getName().equals(name)) {
+                foundUsers.add(user);
+            }
+        }
+        return foundUsers;
+    }
+
+    @Override
+    public User findByLogin(String login) {
+        for (User user : users) {
+            if (user.getLogin().equals(login)) {
                 return user;
             }
         }

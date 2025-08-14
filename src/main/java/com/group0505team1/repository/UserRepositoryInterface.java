@@ -13,11 +13,11 @@ public interface UserRepositoryInterface {
 
     User findById(int id);
 
-    User findByName(String name);
+    List<User> findByName(String name);
 
-    void setRole(User user, RoleUser role);
+    User findByLogin(String login);
 
     List<User> findAll();
 
-
+    void setRole(User user, RoleUser role);
 }
