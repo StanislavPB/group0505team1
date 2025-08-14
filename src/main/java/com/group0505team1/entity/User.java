@@ -9,20 +9,24 @@ public class User {
     private static int counter = 0;
     private int id;
     private String name;
+    private String login;
     private String passwordHash;
     private RoleUser roleUser;
     private List<Task> userTasks;
 
-    public User(String name, String password, RoleUser roleUser) {
+    public User(String name, String login, String passwordHash) {
         this.id = ++counter;
         this.name = name;
-        this.passwordHash = PasswordUtil.hashPassword(password);
-        this.roleUser = roleUser;
+        this.login = login;
+        this.passwordHash = PasswordUtil.hashPassword(passwordHash);
+        this.roleUser = RoleUser.USER;
         this.userTasks = new ArrayList<>();
     }
+
     public void addTask(Task task) {
         userTasks.add(task);
     }
+
     public int getId() {
         return id;
     }
@@ -31,20 +35,24 @@ public class User {
         return name;
     }
 
-    public String getPassword() {
+    public String getLogin() {
+        return login;
+    }
+
+    public String getPasswordHash() {
         return passwordHash;
     }
 
-    public RoleUser getRole() {
+    public RoleUser getRoleUser() {
         return roleUser;
-    }
-
-    public void setRoleUser(RoleUser roleUser) {
-        this.roleUser = roleUser;
     }
 
     public List<Task> getUserTasks() {
         return userTasks;
+    }
+
+    public void setRoleUser(RoleUser roleUser) {
+        this.roleUser = roleUser;
     }
 
     @Override
@@ -53,6 +61,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", login='" + login + '\'' +
                 ", role=" + roleUser +
                 ", tasks in process =  " +
                 tasksInfo +
