@@ -1,20 +1,22 @@
 package com.group0505team1.entity;
 
+import com.group0505team1.util.PasswordUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class User {
-    private int counter = 0;
+    private static int counter = 0;
     private int id;
     private String name;
     private String passwordHash;
     private RoleUser roleUser;
-    private List<Task> userTasks; //хранить только ID задач
+    private List<Task> userTasks;
 
-    public User(String name, String passwordHash, RoleUser roleUser) {
+    public User(String name, String password, RoleUser roleUser) {
         this.id = ++counter;
         this.name = name;
-        this.passwordHash = passwordHash;
+        this.passwordHash = PasswordUtil.hashPassword(password);
         this.roleUser = roleUser;
         this.userTasks = new ArrayList<>();
     }

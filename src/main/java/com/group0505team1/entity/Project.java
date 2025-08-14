@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class Project {
-    private int counter = 0;
+    private static int counter = 0;
     private int projectId;
     private String title;
     private String description;
