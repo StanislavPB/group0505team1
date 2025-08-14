@@ -46,4 +46,11 @@ public class UserSecurity {
 
         return user;
     }
+
+    public void logout(){
+        if (!SessionContext.isAuthenticated()) {
+            throw new AuthenticationException("User is not authenticated");
+        }
+        SessionContext.clear();
+    }
 }

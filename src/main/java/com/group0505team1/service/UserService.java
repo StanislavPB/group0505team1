@@ -48,6 +48,15 @@ public class UserService {
         }
     }
 
+    ResponseDTO logout() {
+        try {
+            userSecurity.logout();
+            return new ResponseDTO<>(200, "User logged out successfully", null);
+        }catch (AuthenticationException e) {
+            return new ResponseDTO<>(400, e.getMessage(), null);
+        }
+    }
+
     ResponseDTO getUserById(int id) {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO<>(401, "Authentication required", null);
