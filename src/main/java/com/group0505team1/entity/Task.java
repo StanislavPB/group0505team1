@@ -8,11 +8,11 @@ public class Task {
     private String title;
     private String description;
     private TaskStatus status;
-    private int priority;
+    private TaskPriority priority;
     private LocalDate deadline;
     private int projectId;
 
-    public Task(String title, String description, TaskStatus status, int priority, LocalDate deadline, int projectId) {
+    public Task(String title, String description, TaskStatus status, TaskPriority priority, LocalDate deadline, int projectId) {
         this.id = ++counter;
         this.title = title;
         this.description = description;
@@ -38,7 +38,7 @@ public class Task {
         return status;
     }
 
-    public int getPriority() {
+    public TaskPriority getPriority() {
         return priority;
     }
 
@@ -52,6 +52,10 @@ public class Task {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
+    }
+
+    public void setPriority(TaskPriority priority) {
+        this.priority = priority;
     }
 
     @Override
