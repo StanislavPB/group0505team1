@@ -57,6 +57,12 @@ public class UserRepository implements UserRepositoryInterface {
     }
 
     @Override
+    public List<Task> findTasksByUserId(int id) {
+        User foundUser = findById(id);
+        return foundUser.getUserTasks();
+    }
+
+    @Override
     public void setRole(User user, RoleUser role) {
         user.setRoleUser(role);
     }

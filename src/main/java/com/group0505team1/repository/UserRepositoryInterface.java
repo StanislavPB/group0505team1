@@ -17,6 +17,8 @@ public interface UserRepositoryInterface {
 
     User findByLogin(String login);
 
+    List<Task> findTasksByUserId(int id);
+
     List<User> findAll();
 
     void setRole(User user, RoleUser role);
