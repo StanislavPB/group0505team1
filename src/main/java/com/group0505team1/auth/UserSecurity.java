@@ -2,6 +2,7 @@ package com.group0505team1.auth;
 
 import com.group0505team1.entity.User;
 import com.group0505team1.exception.AuthenticationException;
+import com.group0505team1.exception.UserNotFoundException;
 import com.group0505team1.repository.UserRepositoryInterface;
 
 public class UserSecurity {
@@ -17,7 +18,7 @@ public class UserSecurity {
         }
         User user = userRepository.findByLogin(login);
         if (user == null) {
-            throw new AuthenticationException("User not found");
+            throw new UserNotFoundException("User not found");
         }
         String passwordHash = user.getPasswordHash();
         if (!PasswordUtil.checkPassword(password, passwordHash)) {
@@ -31,10 +32,10 @@ public class UserSecurity {
         if(name == null || name.isBlank()){
             throw new AuthenticationException("Name is required");
         }
-        if(login == null || login.isBlank() || login.length() > 4 || login.length() <= 10){
+        if(login == null || login.isBlank() || login.length() < 4 || login.length() > 10){
             throw new AuthenticationException("Login is required or not in criteria");
         }
-        if(password == null || password.isBlank() || password.length() > 5 || password.length() <= 10){
+        if(password == null || password.isBlank() || password.length() < 5 || password.length() > 10){
             throw new AuthenticationException("Password is required or not in criteria");
         }
         if(!password.equals(passwordConfirm)){
