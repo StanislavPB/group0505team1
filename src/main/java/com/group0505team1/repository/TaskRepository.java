@@ -1,9 +1,11 @@
 package com.group0505team1.repository;
 
+import com.group0505team1.entity.Project;
 import com.group0505team1.entity.Task;
 import com.group0505team1.entity.TaskPriority;
 import com.group0505team1.entity.TaskStatus;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,4 +45,27 @@ public class TaskRepository implements TaskRepositoryInterface {
     public List<Task> findAll() {
         return new ArrayList<>(tasks);
     }
+
+    @Override
+    public void setTaskStatus(Task task, TaskStatus taskStatus) {
+        task.setStatus(taskStatus);
+    }
+
+    @Override
+    public void setTaskPriority(Task task, TaskPriority taskPriority) {
+       task.setPriority(taskPriority);
+    }
+
+    @Override
+    public void setDeadline(Task task, LocalDate deadline) {
+        task.setDeadline(deadline);
+    }
+
+
+    @Override
+    public void assignTaskToProject(Task task, int projectId) {
+         task.setProjectId(projectId);
+    }
+
+
 }
