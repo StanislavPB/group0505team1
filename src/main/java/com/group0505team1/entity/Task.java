@@ -50,6 +50,14 @@ public class Task {
         return projectId;
     }
 
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
+
     public void setStatus(TaskStatus status) {
         this.status = status;
     }
