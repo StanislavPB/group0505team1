@@ -17,10 +17,12 @@ import java.util.List;
 
 public class UserService {
     UserRepositoryInterface userRepository;
+    TaskService taskService;
     UserSecurity userSecurity;
 
-    public UserService(UserRepositoryInterface userRepository, UserSecurity userSecurity) {
+    public UserService(UserRepositoryInterface userRepository, TaskService taskService, UserSecurity userSecurity) {
         this.userRepository = userRepository;
+        this.taskService =  taskService;
         this.userSecurity = userSecurity;
     }
 
@@ -52,7 +54,7 @@ public class UserService {
         try {
             userSecurity.logout();
             return new ResponseDTO<>(200, "User logged out successfully", null);
-        }catch (AuthenticationException e) {
+        } catch (AuthenticationException e) {
             return new ResponseDTO<>(400, e.getMessage(), null);
         }
     }
