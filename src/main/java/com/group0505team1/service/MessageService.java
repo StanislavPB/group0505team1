@@ -28,7 +28,7 @@ public class MessageService {
             return new ResponseDTO<>(401, "Authentication required", null);
         }
         User sender = SessionContext.getCurrentUser();
-        User receiver = userService.getUserById(requestMessageDTO.getUserIdReceiver());
+        ResponseDTO receiver = userService.getUserById(requestMessageDTO.getUserIdReceiver());
 
         if (requestMessageDTO.getMessage() == null || requestMessageDTO.getMessage().isBlank()) {
             return new ResponseDTO<>(400, "Message cannot be empty!", null);
@@ -39,7 +39,7 @@ public class MessageService {
 
         }
 
-        messageRepositoryInterface.sendMessage(sender, receiver, requestMessageDTO.getMessage());
+        messageRepositoryInterface.sendMessage(sender, (User) receiver.getDataObject(), requestMessageDTO.getMessage());
         return new ResponseDTO(200, "Message sent successfully!", requestMessageDTO.getMessage());
     }
 
