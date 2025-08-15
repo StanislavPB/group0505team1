@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UserService {
-    UserRepositoryInterface userRepository;
-    TaskService taskService;
+    private UserRepositoryInterface userRepository;
+    private TaskService taskService;
     UserSecurity userSecurity;
 
     public UserService(UserRepositoryInterface userRepository, TaskService taskService, UserSecurity userSecurity) {
@@ -26,7 +26,7 @@ public class UserService {
         this.userSecurity = userSecurity;
     }
 
-    ResponseDTO registerUser(RequestRegisterDTO requestRegisterDTO) {
+    public ResponseDTO registerUser(RequestRegisterDTO requestRegisterDTO) {
         String name = requestRegisterDTO.getName();
         String login = requestRegisterDTO.getLogin();
         String password = requestRegisterDTO.getPassword();
@@ -41,7 +41,7 @@ public class UserService {
         }
     }
 
-    ResponseDTO authenticate(RequestAuthDTO requestAuthDTO) {
+    public ResponseDTO authenticate(RequestAuthDTO requestAuthDTO) {
         try {
             User user = userSecurity.authenticate(requestAuthDTO.getLogin(), requestAuthDTO.getPassword());
             return new ResponseDTO<>(200, "User authenticated successfully", UserDTO.fromUser(user));
@@ -50,7 +50,7 @@ public class UserService {
         }
     }
 
-    ResponseDTO logout() {
+    public ResponseDTO logout() {
         try {
             userSecurity.logout();
             return new ResponseDTO<>(200, "User logged out successfully", null);
@@ -59,7 +59,7 @@ public class UserService {
         }
     }
 
-    ResponseDTO getUserById(int id) {
+    public ResponseDTO getUserById(int id) {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO<>(401, "Authentication required", null);
         }
@@ -70,7 +70,7 @@ public class UserService {
         return new ResponseDTO<>(200, "User found", UserDTO.fromUser(user));
     }
 
-    ResponseDTO getUserByLogin(String login) {
+    public ResponseDTO getUserByLogin(String login) {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO<>(401, "Authentication required", null);
         }
@@ -81,7 +81,7 @@ public class UserService {
         return new ResponseDTO<>(200, "User found", UserDTO.fromUser(user));
     }
 
-    ResponseDTO getUsersByName(String name) {
+    public ResponseDTO getUsersByName(String name) {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO<>(401, "Authentication required", null);
         }
@@ -92,7 +92,7 @@ public class UserService {
         return new ResponseDTO<>(200, "Users found", UserDTO.fromUserList(users));
     }
 
-    ResponseDTO getAllUsers() {
+    public ResponseDTO getAllUsers() {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO<>(401, "Authentication required", null);
         }
@@ -103,7 +103,7 @@ public class UserService {
         return new ResponseDTO<>(200, "Users found", UserDTO.fromUserList(users));
     }
 
-    ResponseDTO assignTaskToUser(int idTask, int idUser) {
+    public ResponseDTO assignTaskToUser(int idTask, int idUser) {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO<>(401, "Authentication required", null);
         }
@@ -122,7 +122,7 @@ public class UserService {
         return new ResponseDTO<>(200, "Task assigned successfully", null);
     }
 
-    ResponseDTO getTasksByUserId(int idUser) {
+    public ResponseDTO getTasksByUserId(int idUser) {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO<>(401, "Authentication required", null);
         }
@@ -136,7 +136,7 @@ public class UserService {
         return new ResponseDTO<>(200, "Tasks found", TaskDTO.fromTaskList(user.getUserTasks()));
     }
 
-    ResponseDTO getMyTasks() {
+    public ResponseDTO getMyTasks() {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO<>(401, "Authentication required", null);
         }
@@ -144,7 +144,7 @@ public class UserService {
         return new ResponseDTO(200, "Tasks found", TaskDTO.fromTaskList(user.getUserTasks()));
     }
 
-    ResponseDTO setUserRole(int idUser, String role) {
+    public ResponseDTO setUserRole(int idUser, String role) {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO<>(401, "Authentication required", null);
         }
