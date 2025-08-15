@@ -4,6 +4,7 @@ import com.group0505team1.entity.RoleUser;
 import com.group0505team1.entity.Task;
 import com.group0505team1.entity.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDTO {
@@ -23,6 +24,14 @@ public class UserDTO {
 
     public static UserDTO fromUser(User user){
         return new UserDTO(user.getId(), user.getName(), user.getLogin(), user.getRoleUser(), user.getUserTasks());
+    }
+
+    public static List<UserDTO> fromUserList(List<User> users) {
+        List<UserDTO> userDTOs = new ArrayList<>();
+        for (User user : users){
+            userDTOs.add(fromUser(user));
+        }
+        return userDTOs;
     }
 
     public int getId() {
