@@ -4,6 +4,7 @@ import com.group0505team1.entity.Project;
 import com.group0505team1.entity.Task;
 import com.group0505team1.entity.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectDTO {
@@ -13,7 +14,7 @@ public class ProjectDTO {
     private List<User> users;
     private List<Task> tasks;
 
-    public ProjectDTO(int projectId, String title, String description, List<User> users, List<Task> tasks) {
+    public  ProjectDTO(int projectId, String title, String description, List<User> users, List<Task> tasks) {
         this.projectId = projectId;
         this.title = title;
         this.description = description;
@@ -21,8 +22,15 @@ public class ProjectDTO {
         this.tasks = tasks;
     }
 
-    public ProjectDTO fromProject(Project project){
+    public static ProjectDTO fromProject(Project project){
         return new ProjectDTO(project.getProjectId(),project.getTitle(),project.getDescription(), project.getUsers(),project.getTasks());
+    }
+    public static List<ProjectDTO> fromProjectList(List<Project> projects){
+        List<ProjectDTO> projectDTOs = new ArrayList<>();
+        for (Project p : projects){
+            projectDTOs.add(fromProject(p));
+        }
+        return projectDTOs;
     }
 
     public int getProjectId() {

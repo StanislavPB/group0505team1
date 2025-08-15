@@ -1,5 +1,9 @@
 package com.group0505team1.service;
 
+import com.group0505team1.auth.SessionContext;
+import com.group0505team1.dto.ProjectDTO;
+import com.group0505team1.dto.RequestProjectDTO;
+import com.group0505team1.dto.ResponseDTO;
 import com.group0505team1.entity.Project;
 import com.group0505team1.entity.Task;
 import com.group0505team1.entity.User;
@@ -9,105 +13,97 @@ import java.util.List;
 
 public class ProjectService {
     private final ProjectRepositoryInterface projectRepository;
+    private final TaskService taskService;
+    private final UserService userService;
 
-    public ProjectService(ProjectRepositoryInterface projectRepository) {
+    public ProjectService(ProjectRepositoryInterface projectRepository, TaskService taskService, UserService userService) {
         this.projectRepository = projectRepository;
+        this.taskService = taskService;
+        this.userService = userService;
     }
 
-    public void addProject(Project project) {
-        try {
-            if (project == null) {
-                throw new IllegalArgumentException("Project cannot be null");
-            }
-            projectRepository.add(project);
-            System.out.println("Project successfully added!");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error adding project: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Unexpected error: " + e.getMessage());
+    public ResponseDTO addProject(RequestProjectDTO requestProjectDTO) {
+        if (!SessionContext.isAuthenticated()) {
+            return new ResponseDTO(401, "Authentication required", null);
         }
+        if (!SessionContext.isAdmin()) {
+            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+        }
+
+        String name = requestProjectDTO.getTitle();
+        String description = requestProjectDTO.getDescription();
+        if ((name == null || name.isBlank()) || (description == null || description.isBlank())) {
+            return new ResponseDTO(400, "Wrong data!", null);
+        }
+        Project project = projectRepository.findByName(name);
+        if (project != null) {
+            return new ResponseDTO(400, "Project name is already exist!", null);
+        }
+        Project newProject = new Project(name, description);
+        projectRepository.add(newProject);
+        return new ResponseDTO<>(200, "Project add successfully!", null);
     }
 
-    public Project findByID(int id) {
-        try {
-            Project project = projectRepository.findByID(id);
-            if (project == null) {
-                System.out.println("No project found with ID: " + id);
-            }
-            return project;
-        } catch (Exception e) {
-            System.out.println("Unexpected error: " + e.getMessage());
-            return null;
+    public ResponseDTO findById(int id) {
+        if (!SessionContext.isAuthenticated()) {
+            return new ResponseDTO(401, "Authentication required", null);
         }
+        Project project = projectRepository.findByID(id);
+        if (project == null) {
+            return new ResponseDTO(400, "Project isn't exist!", null);
+        }
+
+        return new ResponseDTO<>(200, "Project found!", ProjectDTO.fromProject(project));
     }
 
-    public Project findByName(String name) {
-        try {
-            if (name == null || name.isBlank()) {
-                throw new IllegalArgumentException("Project name cannot be empty");
-            }
-            Project project = projectRepository.findByName(name);
-            if (project == null) {
-                System.out.println("No project found with name: " + name);
-            }
-            return project;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-            return null;
-        } catch (Exception e) {
-            System.out.println("Unexpected error: " + e.getMessage());
-            return null;
+    public ResponseDTO findByName(String name) {
+        if (!SessionContext.isAuthenticated()) {
+            return new ResponseDTO(401, "Authentication required", null);
         }
+        Project project = projectRepository.findByName(name);
+        if (project == null) {
+            return new ResponseDTO(400, "Project isn't exist!", null);
+        }
+
+        return new ResponseDTO<>(200, "Project found!", ProjectDTO.fromProject(project));
+
     }
 
-    public List<Project> getAllProjects() {
-        try {
-            return projectRepository.getAllProject();
-        } catch (Exception e) {
-            System.out.println("Unexpected error while fetching projects: " + e.getMessage());
-            return List.of();
+    public ResponseDTO getAllProjects() {
+        if (!SessionContext.isAuthenticated()) {
+            return new ResponseDTO(401, "Authentication required", null);
         }
+        if (!SessionContext.isAdmin()) {
+            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+        }
+        List<Project> projects = projectRepository.getAllProject();
+        return new ResponseDTO<>(200, "Projects found!", ProjectDTO.fromProjectList(projects));
+
     }
 
-    public boolean addUserToProject(int idProject, User user) {
-        try {
-            if (user == null) {
-                throw new IllegalArgumentException("User cannot be null");
-            }
-            boolean result = projectRepository.addUserToProject(idProject, user);
-            if (result) {
-                System.out.println("User successfully added to the project!");
-            } else {
-                System.out.println("Failed to add user to the project.");
-            }
-            return result;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-            return false;
-        } catch (Exception e) {
-            System.out.println("Unexpected error: " + e.getMessage());
-            return false;
+    public ResponseDTO addUserToProject(int projectId, int userId) {
+        if (!SessionContext.isAuthenticated()) {
+            return new ResponseDTO(401, "Authentication required", null);
         }
+        if (!SessionContext.isAdmin()) {
+            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+        }
+        ResponseDTO responseProject = findById(projectId);
+        ResponseDTO responseUser = userService.getUserById(userId);
+        projectRepository.addUserToProject(projectId, (User) responseUser.getDataObject());
+        return new ResponseDTO<>(200, "User added to project successfully!", null);
     }
 
-    public boolean addTaskToProject(int idProject, Task task) {
-        try {
-            if (task == null) {
-                throw new IllegalArgumentException("Task cannot be null");
-            }
-            boolean result = projectRepository.addTaskToProject(idProject, task);
-            if (result) {
-                System.out.println("Task successfully added to the project!");
-            } else {
-                System.out.println("Failed to add task to the project.");
-            }
-            return result;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-            return false;
-        } catch (Exception e) {
-            System.out.println("Unexpected error: " + e.getMessage());
-            return false;
+    public ResponseDTO addTaskToProject(int projectId, int taskId) {
+        if (!SessionContext.isAuthenticated()) {
+            return new ResponseDTO(401, "Authentication required", null);
         }
+        if (!SessionContext.isAdmin()) {
+            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+        }
+        ResponseDTO responseProject = findById(projectId);
+        ResponseDTO responseTask = taskService.findTaskById(taskId);
+        projectRepository.addTaskToProject(projectId, (Task) responseTask.getDataObject());
+        return new ResponseDTO<>(200, "Task added to project successfully!", null);
     }
 }
