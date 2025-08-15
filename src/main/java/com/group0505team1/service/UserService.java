@@ -2,10 +2,7 @@ package com.group0505team1.service;
 
 import com.group0505team1.auth.SessionContext;
 import com.group0505team1.auth.UserSecurity;
-import com.group0505team1.dto.RequestAuthDTO;
-import com.group0505team1.dto.RequestRegisterDTO;
-import com.group0505team1.dto.ResponseDTO;
-import com.group0505team1.dto.UserDTO;
+import com.group0505team1.dto.*;
 import com.group0505team1.entity.RoleUser;
 import com.group0505team1.entity.Task;
 import com.group0505team1.entity.User;
@@ -114,7 +111,7 @@ public class UserService {
         if (user == null) {
             return new ResponseDTO<>(404, "User not found", null);
         }
-        ResponseDTO responseDTO = taskService.getTaskById;
+        ResponseDTO responseDTO = taskService.findTaskById(idTask);
         if (responseDTO.getCode() != 200) {
             return new ResponseDTO<>(404, "Task not found", null);
         }
