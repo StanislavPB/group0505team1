@@ -51,4 +51,15 @@ public class MessageDTO {
     public LocalDateTime getDateTime() {
         return dateTime;
     }
+
+    @Override
+    public String toString() {
+        return "MessageDTO{" +
+                "id=" + id +
+                ", message='" + message + '\'' +
+                ", userIdSender=" + userIdSender +
+                ", userIdReceiver=" + userIdReceiver +
+                ", dateTime=" + dateTime +
+                '}';
+    }
 }

@@ -1,9 +1,7 @@
 package com.group0505team1.service;
 
 import com.group0505team1.auth.SessionContext;
-import com.group0505team1.dto.ProjectDTO;
-import com.group0505team1.dto.RequestProjectDTO;
-import com.group0505team1.dto.ResponseDTO;
+import com.group0505team1.dto.*;
 import com.group0505team1.entity.Project;
 import com.group0505team1.entity.Task;
 import com.group0505team1.entity.User;
@@ -11,17 +9,18 @@ import com.group0505team1.repository.ProjectRepositoryInterface;
 
 import java.util.List;
 
-public class ProjectService {
+public class ProjectService implements ProjectServiceInterface {
     private final ProjectRepositoryInterface projectRepository;
-    private final TaskService taskService;
+    private final TaskServiceInterface taskService;
     private final UserService userService;
 
-    public ProjectService(ProjectRepositoryInterface projectRepository, TaskService taskService, UserService userService) {
+    public ProjectService(ProjectRepositoryInterface projectRepository, TaskServiceInterface taskService, UserService userService) {
         this.projectRepository = projectRepository;
         this.taskService = taskService;
         this.userService = userService;
     }
 
+    @Override
     public ResponseDTO addProject(RequestProjectDTO requestProjectDTO) {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO(401, "Authentication required", null);
@@ -44,6 +43,7 @@ public class ProjectService {
         return new ResponseDTO<>(200, "Project add successfully!", null);
     }
 
+    @Override
     public ResponseDTO findById(int id) {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO(401, "Authentication required", null);
@@ -56,6 +56,7 @@ public class ProjectService {
         return new ResponseDTO<>(200, "Project found!", ProjectDTO.fromProject(project));
     }
 
+    @Override
     public ResponseDTO findByName(String name) {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO(401, "Authentication required", null);
@@ -69,6 +70,7 @@ public class ProjectService {
 
     }
 
+    @Override
     public ResponseDTO getAllProjects() {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO(401, "Authentication required", null);
@@ -81,6 +83,18 @@ public class ProjectService {
 
     }
 
+    @Override
+    public ResponseDTO getMyProjects() {
+        if (!SessionContext.isAuthenticated()) {
+            return new ResponseDTO(401, "Authentication required", null);
+        }
+        User user = SessionContext.getCurrentUser();
+        List<Project> projects = projectRepository.getAllProject();
+        projects.removeIf(project -> !project.getUsers().contains(user));
+        return new ResponseDTO<>(200, "Projects found!", ProjectDTO.fromProjectList(projects));
+    }
+
+    @Override
     public ResponseDTO addUserToProject(int projectId, int userId) {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO(401, "Authentication required", null);
@@ -88,12 +102,24 @@ public class ProjectService {
         if (!SessionContext.isAdmin()) {
             return new ResponseDTO(403, "Access denied. Admin rights are required", null);
         }
-        ResponseDTO responseProject = findById(projectId);
+        Project project = projectRepository.findByID(projectId);
+        if (project == null) {
+            return new ResponseDTO(404, "Project not found", null);
+        }
         ResponseDTO responseUser = userService.getUserById(userId);
-        projectRepository.addUserToProject(projectId, (User) responseUser.getDataObject());
-        return new ResponseDTO<>(200, "User added to project successfully!", null);
+        if (responseUser.getCode() != 200) {
+            return new ResponseDTO(404, "User not found", null);
+        }
+        UserDTO userDTO = (UserDTO) responseUser.getDataObject();
+        User user = userService.of(userDTO);
+        if (project.getUsers().contains(user)) {
+            return new ResponseDTO(400, "User already in project!", null);
+        }
+        projectRepository.addUserToProject(projectId, user);
+        return new ResponseDTO(200, "User added to project successfully!", null);
     }
 
+    @Override
     public ResponseDTO addTaskToProject(int projectId, int taskId) {
         if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO(401, "Authentication required", null);
@@ -101,9 +127,57 @@ public class ProjectService {
         if (!SessionContext.isAdmin()) {
             return new ResponseDTO(403, "Access denied. Admin rights are required", null);
         }
-        ResponseDTO responseProject = findById(projectId);
+        Project project = projectRepository.findByID(projectId);
+        if (project == null) {
+            return new ResponseDTO(404, "Project not found", null);
+        }
         ResponseDTO responseTask = taskService.findTaskById(taskId);
-        projectRepository.addTaskToProject(projectId, (Task) responseTask.getDataObject());
-        return new ResponseDTO<>(200, "Task added to project successfully!", null);
+        if (responseTask.getCode() != 200) {
+            return new ResponseDTO(404, "Task not found", null);
+        }
+        TaskDTO taskDTO = (TaskDTO) responseTask.getDataObject();
+        Task task = taskService.of(taskDTO);
+        if (project.getTasks().contains(task)) {
+            return new ResponseDTO(400, "Task already in project!", null);
+        }
+        projectRepository.addTaskToProject(projectId, task);
+        taskService.assignTaskToProject(taskId, projectId);
+        return new ResponseDTO(200, "Task added to project successfully!", null);
+    }
+
+    @Override
+    public ResponseDTO getUsersByProject(int projectId) {
+        if (!SessionContext.isAuthenticated()) {
+            return new ResponseDTO(401, "Authentication required", null);
+        }
+        if (!SessionContext.isAdmin()) {
+            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+        }
+        Project project = projectRepository.findByID(projectId);
+        if (project == null) {
+            return new ResponseDTO(404, "Project not found", null);
+        }
+        List<User> users = project.getUsers();
+        return new ResponseDTO(200, "Users found!", UserDTO.fromUserList(users));
+    }
+
+    @Override
+    public ResponseDTO getTaskByProject(int projectId) {
+        if (!SessionContext.isAuthenticated()) {
+            return new ResponseDTO(401, "Authentication required", null);
+        }
+        if (!SessionContext.isAdmin()) {
+            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+        }
+        Project project = projectRepository.findByID(projectId);
+        if (project == null) {
+            return new ResponseDTO(404, "Project not found", null);
+        }
+        List<Task> tasks = project.getTasks();
+        return new ResponseDTO(200, "Tasks found!", TaskDTO.fromTaskList(tasks));
+    }
+
+    Project of(ProjectDTO projectDTO) {
+        return projectRepository.findByID(projectDTO.getProjectId());
     }
 }

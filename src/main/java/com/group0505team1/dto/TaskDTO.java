@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDTO {
-    private int id = 0;
+    private int id;
     private String title;
     private String description;
     private TaskStatus status;
@@ -65,5 +65,18 @@ public class TaskDTO {
             taskDTOs.add(fromTask(task));
         }
         return taskDTOs;
+    }
+
+    @Override
+    public String toString() {
+        return "TaskDTO{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", priority=" + priority +
+                ", deadline=" + deadline +
+                ", projectId=" + projectId +
+                '}';
     }
 }

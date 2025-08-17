@@ -10,9 +10,9 @@ import com.group0505team1.entity.User;
 import com.group0505team1.repository.MessageRepositoryInterface;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class MessageService {
+
+public class MessageService implements MessageServiceInterface {
     private final MessageRepositoryInterface messageRepositoryInterface;
     private final UserSecurity userSecurity;
     private final UserService userService;
@@ -23,8 +23,12 @@ public class MessageService {
         this.userService = userService;
     }
 
+    private boolean isAuthenticated() {
+        return SessionContext.isAuthenticated();
+    }
+
     public ResponseDTO sendMessage(RequestMessageDTO requestMessageDTO) {
-        if (!SessionContext.isAuthenticated()) {
+        if (!isAuthenticated()) {
             return new ResponseDTO<>(401, "Authentication required", null);
         }
         User sender = SessionContext.getCurrentUser();
@@ -38,13 +42,13 @@ public class MessageService {
             return new ResponseDTO<>(404, "User not found", null);
 
         }
-
-        messageRepositoryInterface.sendMessage(sender, (User) receiver.getDataObject(), requestMessageDTO.getMessage());
+        User userReceiver = userService.of(requestMessageDTO);
+        messageRepositoryInterface.sendMessage(sender, userReceiver, requestMessageDTO.getMessage());
         return new ResponseDTO(200, "Message sent successfully!", requestMessageDTO.getMessage());
     }
 
-    public ResponseDTO  getReceivedMessages() {
-        if (!SessionContext.isAuthenticated()) {
+    public ResponseDTO getReceivedMessages() {
+        if (!isAuthenticated()) {
             return new ResponseDTO<>(401, "Authentication required", null);
         }
         User user = SessionContext.getCurrentUser();
@@ -54,7 +58,7 @@ public class MessageService {
     }
 
     public ResponseDTO getSentMessages() {
-        if (!SessionContext.isAuthenticated()) {
+        if (!isAuthenticated()) {
             return new ResponseDTO<>(401, "Authentication required", null);
         }
         User user = SessionContext.getCurrentUser();
@@ -65,7 +69,7 @@ public class MessageService {
     }
 
     public ResponseDTO getAllMessages() {
-        if (!SessionContext.isAuthenticated()) {
+        if (!isAuthenticated()) {
             return new ResponseDTO<>(401, "Authentication required", null);
         }
         if (!SessionContext.isAdmin()) {
@@ -73,7 +77,7 @@ public class MessageService {
         }
         List<Message> messages = messageRepositoryInterface.getAllMessages();
 
-       return new ResponseDTO<>(200, "Messages found", MessageDTO.fromMessageList(messages));
+        return new ResponseDTO<>(200, "Messages found", MessageDTO.fromMessageList(messages));
     }
 
 }
