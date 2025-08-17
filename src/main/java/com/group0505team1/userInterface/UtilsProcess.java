@@ -124,4 +124,29 @@ public class UtilsProcess {
             System.out.println(user.toString());
         }
     }
+
+    public  void showCommonProjectStatistics(){
+        System.out.println("Project statistics:");
+        System.out.println("Total projects: " + statisticService.getProjectsTotalQuantity().getDataObject());
+        System.out.println("Projects done: " + statisticService.getProjectsDoneQuantity().getDataObject());
+        System.out.println("Projects in process: " + statisticService.getProjectsInProcessQuantity().getDataObject());
+    }
+
+    public void showCommonTaskStatistics(){
+        System.out.println("Task statistics:");
+        System.out.println("Total tasks: " + statisticService.getTaskTotalQuantity().getDataObject());
+        System.out.println("Tasks done: " + statisticService.getTaskDoneQuantity().getDataObject());
+        System.out.println("Tasks in progress: " + statisticService.getTaskInProcessQuantity().getDataObject());
+        System.out.println("Tasks over time: " + statisticService.getTaskOverTimeQuantity());
+    }
+    public void showCommonUserStatistics(){
+        System.out.println("User statistics:");
+        System.out.println("Total users : " + statisticService.getUserTotalQuantity().getDataObject());
+        System.out.println("Users by task quantity: ");
+        List<UserDTO> users = (List<UserDTO>) statisticService.getUsersByTasksQuantity().getDataObject();
+        for (UserDTO u : users){
+            System.out.println(u.getName() + "tasks : "+ u.getUserTasks().size());
+        }
+
+    }
 }
