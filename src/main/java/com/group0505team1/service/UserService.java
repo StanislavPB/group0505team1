@@ -169,4 +169,8 @@ public class UserService implements UserServiceInterface{
         user.setRoleUser(RoleUser.valueOf(role));
         return new ResponseDTO<>(200, "Role set successfully", null);
     }
+
+    public User of(UserDTO userDTO){
+        return userRepository.findById(userDTO.getId());
+    }
 }

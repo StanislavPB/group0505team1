@@ -102,15 +102,20 @@ public class ProjectService implements ProjectServiceInterface {
         if (!SessionContext.isAdmin()) {
             return new ResponseDTO(403, "Access denied. Admin rights are required", null);
         }
-        ResponseDTO responseProject = findById(projectId);
-        if (responseProject.getCode() != 200) {
+        Project project = projectRepository.findByID(projectId);
+        if (project == null) {
             return new ResponseDTO(404, "Project not found", null);
         }
         ResponseDTO responseUser = userService.getUserById(userId);
         if (responseUser.getCode() != 200) {
             return new ResponseDTO(404, "User not found", null);
         }
-        projectRepository.addUserToProject(projectId, (User) responseUser.getDataObject());
+        UserDTO userDTO = (UserDTO) responseUser.getDataObject();
+        User user = userService.of(userDTO);
+        if (project.getUsers().contains(user)) {
+            return new ResponseDTO(400, "User already in project!", null);
+        }
+        projectRepository.addUserToProject(projectId, user);
         return new ResponseDTO(200, "User added to project successfully!", null);
     }
 
@@ -122,15 +127,21 @@ public class ProjectService implements ProjectServiceInterface {
         if (!SessionContext.isAdmin()) {
             return new ResponseDTO(403, "Access denied. Admin rights are required", null);
         }
-        ResponseDTO responseProject = findById(projectId);
-        if (responseProject.getCode() != 200) {
+        Project project = projectRepository.findByID(projectId);
+        if (project == null) {
             return new ResponseDTO(404, "Project not found", null);
         }
         ResponseDTO responseTask = taskService.findTaskById(taskId);
         if (responseTask.getCode() != 200) {
             return new ResponseDTO(404, "Task not found", null);
         }
-        projectRepository.addTaskToProject(projectId, (Task) responseTask.getDataObject());
+        TaskDTO taskDTO = (TaskDTO) responseTask.getDataObject();
+        Task task = taskService.of(taskDTO);
+        if (project.getTasks().contains(task)) {
+            return new ResponseDTO(400, "Task already in project!", null);
+        }
+        projectRepository.addTaskToProject(projectId, task);
+        taskService.assignTaskToProject(taskId, projectId);
         return new ResponseDTO(200, "Task added to project successfully!", null);
     }
 
@@ -142,11 +153,11 @@ public class ProjectService implements ProjectServiceInterface {
         if (!SessionContext.isAdmin()) {
             return new ResponseDTO(403, "Access denied. Admin rights are required", null);
         }
-        ResponseDTO responseProject = findById(projectId);
-        if (responseProject.getCode() != 200) {
+        Project project = projectRepository.findByID(projectId);
+        if (project == null) {
             return new ResponseDTO(404, "Project not found", null);
         }
-        List<User> users = (List<User>) responseProject.getDataObject();
+        List<User> users = project.getUsers();
         return new ResponseDTO(200, "Users found!", UserDTO.fromUserList(users));
     }
 
@@ -158,12 +169,15 @@ public class ProjectService implements ProjectServiceInterface {
         if (!SessionContext.isAdmin()) {
             return new ResponseDTO(403, "Access denied. Admin rights are required", null);
         }
-        ResponseDTO responseProject = findById(projectId);
-        if (responseProject.getCode() != 200) {
+        Project project = projectRepository.findByID(projectId);
+        if (project == null) {
             return new ResponseDTO(404, "Project not found", null);
         }
-        List<Task> tasks = (List<Task>) responseProject.getDataObject();
+        List<Task> tasks = project.getTasks();
         return new ResponseDTO(200, "Tasks found!", TaskDTO.fromTaskList(tasks));
+    }
 
+    Project of(ProjectDTO projectDTO) {
+        return projectRepository.findByID(projectDTO.getProjectId());
     }
 }

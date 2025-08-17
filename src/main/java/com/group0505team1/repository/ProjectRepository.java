@@ -57,7 +57,7 @@ public class ProjectRepository implements ProjectRepositoryInterface {
         if (project.getTasks().contains(task)) {
             return false;
         }
-        project.addTask(task);
+        project.getTasks().add(task);
         return true;
     }
 }

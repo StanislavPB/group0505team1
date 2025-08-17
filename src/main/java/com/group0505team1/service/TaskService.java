@@ -26,19 +26,21 @@ public class TaskService implements TaskServiceInterface{
     }
 
     @Override
-    public ResponseDTO<Task> addTask(RequestTaskDTO requestTaskDTO) {
+    public ResponseDTO addTask(RequestTaskDTO requestTaskDTO) {
         if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
+            return new ResponseDTO(401, "Authentication required", null);
         }
         if (!SessionContext.isAdmin()) {
-            return new ResponseDTO<>(403, "Access denied. Admin rights are required", null);
+            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
         }
-        taskRepositoryInterface.add(new Task(requestTaskDTO.getTitle(),
+        Task task = new Task(requestTaskDTO.getTitle(),
                 requestTaskDTO.getDescription(),
                 requestTaskDTO.getStatus(),
                 requestTaskDTO.getPriority(),
                 requestTaskDTO.getDeadline(),
-                requestTaskDTO.getProjectId()));
+                requestTaskDTO.getProjectId());
+        taskRepositoryInterface.add(task);
+        projectService.addTaskToProject(requestTaskDTO.getProjectId(), task.getId());
 
         return new ResponseDTO<>(200, "Successfully added task", null);
     }
@@ -58,7 +60,7 @@ public class TaskService implements TaskServiceInterface{
 
     @Override
     public ResponseDTO findTaskById(int taskId) {
-        if (SessionContext.isAuthenticated()) {
+        if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO(401, "Authentication required", null);
         }
         Task task = taskRepositoryInterface.findById(taskId);
@@ -158,16 +160,21 @@ public class TaskService implements TaskServiceInterface{
             return new ResponseDTO(404, "Task not found", null);
         }
         ResponseDTO project = projectService.findById(projectId);
-        if (project == null) {
+        if (project.getCode() != 200) {
             return new ResponseDTO(404, "Project not found", null);
         }
         taskRepositoryInterface.assignTaskToProject(task, projectId);
+        projectService.addTaskToProject(projectId, taskId);
         return new ResponseDTO(200, "Successfully assigned task to project", task);
     }
 
     @Override
     public void setProjectService(ProjectServiceInterface projectService) {
         this.projectService = projectService;
+    }
+
+    public Task of(TaskDTO taskDTO){
+        return taskRepositoryInterface.findById(taskDTO.getId());
     }
 }
 
