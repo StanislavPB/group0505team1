@@ -24,7 +24,7 @@ public class MainProcess {
                 case "T" -> tasksMenu();
                 case "U" -> usersMenu();
 //                case "M" -> messagesMenu();
-//                case "S" -> statisticsMenu();
+               case "S" -> statisticsMenu();
                 case "0" -> isRunning = false;
                 default -> System.out.println("Invalid command!");
             }
@@ -151,6 +151,21 @@ public class MainProcess {
         System.out.println("0. Exit menu");
     }
 
+    private void statisticsMenu() {
+        boolean isRunning = true;
+        while (isRunning) {
+            showStatisticMenu();
+            printSeparator();
+            String command = UserInputStatic.inputText("Enter the command:").toUpperCase();
+            switch (command) {
+                case "1" -> utilsProcess.showCommonProjectStatistics();
+                case "2" -> utilsProcess.showCommonTaskStatistics();
+                case "3" -> utilsProcess.showCommonUserStatistics();
+                case "0" -> isRunning = false;
+                default -> System.out.println("Invalid command!");
+            }
+        }
+    }
     private void printSeparator() {
         System.out.println("----------------------------------------");
     }
