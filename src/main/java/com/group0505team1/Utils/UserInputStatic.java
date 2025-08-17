@@ -1,5 +1,6 @@
 package com.group0505team1.Utils;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class UserInputStatic {
@@ -23,6 +24,22 @@ public class UserInputStatic {
         double input = scanner.nextDouble();
         scanner.nextLine();
         return input;
+    }
+
+    public static LocalDate inputDate(String message){
+        while(true){
+            System.out.println(message);
+            String date = scanner.nextLine().trim();
+            if (date.isEmpty()){
+                System.out.println("Date is empty");
+                continue;
+            }
+            try {
+                return LocalDate.parse(date);
+            }catch (Exception e){
+                System.out.println("Invalid date format . Use YEAR-MONTH-DAY");
+            }
+        }
     }
 
     public static void close(){

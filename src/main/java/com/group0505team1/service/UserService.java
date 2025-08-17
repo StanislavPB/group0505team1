@@ -9,17 +9,18 @@ import com.group0505team1.entity.User;
 import com.group0505team1.exception.AuthenticationException;
 import com.group0505team1.repository.UserRepositoryInterface;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class UserService implements UserServiceInterface{
+public class UserService implements UserServiceInterface {
     private final UserRepositoryInterface userRepository;
     private final TaskServiceInterface taskService;
     private final UserSecurity userSecurity;
 
     public UserService(UserRepositoryInterface userRepository, TaskServiceInterface taskService, UserSecurity userSecurity) {
         this.userRepository = userRepository;
-        this.taskService =  taskService;
+        this.taskService = taskService;
         this.userSecurity = userSecurity;
     }
 
@@ -168,5 +169,33 @@ public class UserService implements UserServiceInterface{
         }
         user.setRoleUser(RoleUser.valueOf(role));
         return new ResponseDTO<>(200, "Role set successfully", null);
+    }
+
+    @Override
+    public ResponseDTO getAllUserFromTaskId(int idTask) {
+        if (!SessionContext.isAuthenticated()) {
+            return new ResponseDTO<>(401, "Authentication required", null);
+        }
+        if (!SessionContext.isAdmin()) {
+            return new ResponseDTO<>(403, "Access denied. Admin rights are required", null);
+        }
+        List<User> allUser = userRepository.findAll();
+        List<User> filterByUser = new ArrayList<>();
+        for (User filterUser : allUser) {
+            List<Task> tasks = filterUser.getUserTasks();
+            if (!tasks.isEmpty() || tasks != null) {
+                for (Task task : tasks) {
+                    if (task.getId() == idTask) {
+                        filterByUser.add(filterUser);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (filterByUser.isEmpty()) {
+            return new ResponseDTO<>(404, "Users not found", null);
+        }
+        return new ResponseDTO<>(200, "Users found", UserDTO.fromUserList(filterByUser));
     }
 }

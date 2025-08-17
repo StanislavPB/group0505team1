@@ -21,8 +21,8 @@ public class MainProcess {
                 case "2" -> utilsProcess.register();
                 case "3" -> utilsProcess.logout();
                 case "P" -> projectsMenu();
-//                case "T" -> tasksMenu();
-//                case "U" -> usersMenu();
+                case "T" -> tasksMenu();
+                case "U" -> usersMenu();
 //                case "M" -> messagesMenu();
                case "S" -> statisticsMenu();
                 case "0" -> isRunning = false;
@@ -31,7 +31,7 @@ public class MainProcess {
         }
     }
 
-    private void projectsMenu(){
+    private void projectsMenu() {
         boolean isRunning = true;
         while (isRunning) {
             showProjectMenu();
@@ -51,6 +51,41 @@ public class MainProcess {
             }
         }
 
+    }
+
+    private void usersMenu() {
+        boolean isRunning = true;
+        while (isRunning) {
+            showUserMenu();
+            printSeparator();
+            String command = UserInputStatic.inputText("Enter the command:").toUpperCase();
+            switch (command) {
+                case "1" -> utilsProcess.showUserProfileProcess();
+                case "2" -> utilsProcess.showAllUsersProcess();
+                case "3" -> utilsProcess.setRoleProcess();
+                case "0" -> isRunning = false;
+                default -> System.out.println("Invalid command!");
+            }
+        }
+    }
+
+    private void tasksMenu() {
+        boolean isRunning = true;
+        while (isRunning) {
+            showTaskMenu();
+            printSeparator();
+            String command = UserInputStatic.inputText("Enter the command:").toUpperCase();
+            switch (command) {
+                case "1" -> utilsProcess.showUserTaskProcess();
+                case "2" -> utilsProcess.createNewTaskProcess();
+                case "3" -> utilsProcess.showAllTaskProcess();
+                case "4" -> utilsProcess.getTasksForUserByIdProcess();
+                case "5" -> utilsProcess.assignTaskToUserProcess();
+                case "6" -> utilsProcess.showAllUsersFromTaskIdProcess();
+                case "0" -> isRunning = false;
+                default -> System.out.println("Invalid command!");
+            }
+        }
     }
 
 
@@ -79,21 +114,26 @@ public class MainProcess {
         System.out.println("0. Exit menu");
     }
 
+
     private void showTaskMenu() {
         System.out.println("1. Show my tasks");
-        System.out.println("2. Create new task");
-        System.out.println("3. Show all tasks (Admin only)");
-        System.out.println("4. Show tasks for user (Admin only)");
-        System.out.println("5. Assign task to user (Admin only)");
-        System.out.println("6. Show users for task (Admin only)");
+        if (SessionContext.isAdmin()) {
+            System.out.println("2. Create new task (Admin only)");
+            System.out.println("3. Show all tasks (Admin only)");
+            System.out.println("4. Show tasks for user (Admin only)");
+            System.out.println("5. Assign task to user (Admin only)");
+            System.out.println("6. Show users for task (Admin only)");
+        }
         System.out.println("0. Exit menu");
     }
 
     private void showUserMenu() {
         System.out.println("1. Show my profile");
-        System.out.println("2. Show all users");
-        System.out.println("3. Set user role (Admin only)");
-        System.out.println("0. Exit menu");
+        System.out.println("2. Show all users ");
+        if (SessionContext.isAdmin()) {
+            System.out.println("3. Set user role (Admin only)");
+            System.out.println("0. Exit menu");
+        }
     }
 
     private void showMessageMenu() {
