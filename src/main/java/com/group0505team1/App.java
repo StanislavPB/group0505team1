@@ -2,6 +2,7 @@ package com.group0505team1;
 
 import com.group0505team1.auth.SessionContext;
 import com.group0505team1.auth.UserSecurity;
+import com.group0505team1.dto.RequestMessageDTO;
 import com.group0505team1.dto.RequestRegisterDTO;
 import com.group0505team1.dto.RequestTaskDTO;
 import com.group0505team1.entity.*;
@@ -48,6 +49,14 @@ public class App {
         taskService.addTask(new RequestTaskDTO("Task5", "Description5", LocalDate.of(2025, 9, 01), 1));
         taskService.addTask(new RequestTaskDTO("Task6", "Description6", LocalDate.of(2025, 8, 19), 1));
 
+        userService.assignTaskToUser(1, 3);
+        userService.assignTaskToUser(2, 3);
+        userService.assignTaskToUser(6, 3);
+
+        messageService.sendMessage(new RequestMessageDTO("Hello User1", 1));
+        messageService.sendMessage(new RequestMessageDTO("Hello User2", 2));
+        messageService.sendMessage(new RequestMessageDTO("Hi !!!", 2));
+        messageService.sendMessage(new RequestMessageDTO("Super!!!", 2));
 
         mainProcess.run();
     }

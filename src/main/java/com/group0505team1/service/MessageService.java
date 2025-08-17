@@ -42,8 +42,8 @@ public class MessageService implements MessageServiceInterface {
             return new ResponseDTO<>(404, "User not found", null);
 
         }
-
-        messageRepositoryInterface.sendMessage(sender, (User) receiver.getDataObject(), requestMessageDTO.getMessage());
+        User userReceiver = userService.of(requestMessageDTO);
+        messageRepositoryInterface.sendMessage(sender, userReceiver, requestMessageDTO.getMessage());
         return new ResponseDTO(200, "Message sent successfully!", requestMessageDTO.getMessage());
     }
 

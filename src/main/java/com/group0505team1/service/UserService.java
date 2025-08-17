@@ -177,6 +177,11 @@ public class UserService implements UserServiceInterface {
     public User of(UserDTO userDTO) {
         return userRepository.findById(userDTO.getId());
     }
+
+    public User of(RequestMessageDTO requestMessageDTO){
+        return userRepository.findById(requestMessageDTO.getUserIdReceiver());
+    }
+
     @Override
     public ResponseDTO getAllUserFromTaskId(int idTask) {
         if (!SessionContext.isAuthenticated()) {

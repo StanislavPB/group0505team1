@@ -132,8 +132,8 @@ public class MainProcess {
         System.out.println("2. Show all users ");
         if (SessionContext.isAdmin()) {
             System.out.println("3. Set user role (Admin only)");
-            System.out.println("0. Exit menu");
         }
+            System.out.println("0. Exit menu");
     }
 
     private void showMessageMenu() {
