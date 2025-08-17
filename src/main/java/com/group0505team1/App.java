@@ -1,8 +1,10 @@
 package com.group0505team1;
 
+import com.group0505team1.auth.SessionContext;
 import com.group0505team1.auth.UserSecurity;
 import com.group0505team1.dto.RequestProjectDTO;
 import com.group0505team1.dto.RequestRegisterDTO;
+import com.group0505team1.dto.RequestTaskDTO;
 import com.group0505team1.entity.*;
 import com.group0505team1.repository.*;
 import com.group0505team1.service.*;
@@ -34,17 +36,18 @@ public class App {
         userService.registerUser(new RequestRegisterDTO("User1", "user1", "passUser1", "passUser1"));
         userService.registerUser(new RequestRegisterDTO("User2", "user2", "passUser2", "passUser2"));
 
+        SessionContext.setCurrentUser(userRepository.findById(adminId));
         projectRepository.add(new Project("Project1", "First project of team 1"));
         projectRepository.add(new Project("Project2", "First project of team 2"));
-//        projectRepository.addUserToProject(1, 2);
-//        projectRepository.addUserToProject(2, 3);
+        projectRepository.addUserToProject(1, userRepository.findById(2));
+        projectRepository.addUserToProject(2, userRepository.findById(3));
 
-        taskRepository.add(new Task("Task1", "Description1", TaskStatus.TODO, TaskPriority.LOW, LocalDate.of(2025, 8, 19), 1));
-        taskRepository.add(new Task("Task2", "Description2", TaskStatus.TODO, TaskPriority.LOW, LocalDate.of(2025, 7, 13), 1));
-        taskRepository.add(new Task("Task3", "Description3", TaskStatus.TODO, TaskPriority.LOW, LocalDate.of(2025, 8, 15), 2));
-        taskRepository.add(new Task("Task4", "Description4", TaskStatus.TODO, TaskPriority.LOW, LocalDate.of(2025, 8, 19), 2));
-        taskRepository.add(new Task("Task5", "Description5", TaskStatus.TODO, TaskPriority.LOW, LocalDate.of(2025, 9, 01), 1));
-
+        taskService.addTask(new RequestTaskDTO("Task1", "Description1", LocalDate.of(2025, 8, 19), 1));
+        taskService.addTask(new RequestTaskDTO("Task2", "Description2", LocalDate.of(2025, 7, 13), 1));
+        taskService.addTask(new RequestTaskDTO("Task3", "Description3", LocalDate.of(2025, 8, 15), 2));
+        taskService.addTask(new RequestTaskDTO("Task4", "Description4", LocalDate.of(2025, 8, 19), 2));
+        taskService.addTask(new RequestTaskDTO("Task5", "Description5", LocalDate.of(2025, 9, 01), 1));
+        taskService.addTask(new RequestTaskDTO("Task6", "Description6", LocalDate.of(2025, 8, 19), 1));
 
 
         mainProcess.run();

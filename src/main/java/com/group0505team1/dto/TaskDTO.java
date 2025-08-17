@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDTO {
-    private int id = 0;
+    private int id;
     private String title;
     private String description;
     private TaskStatus status;

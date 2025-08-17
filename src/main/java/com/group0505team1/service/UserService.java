@@ -171,6 +171,10 @@ public class UserService implements UserServiceInterface {
         return new ResponseDTO<>(200, "Role set successfully", null);
     }
 
+
+    public User of(UserDTO userDTO){
+        return userRepository.findById(userDTO.getId());
+
     @Override
     public ResponseDTO getAllUserFromTaskId(int idTask) {
         if (!SessionContext.isAuthenticated()) {
