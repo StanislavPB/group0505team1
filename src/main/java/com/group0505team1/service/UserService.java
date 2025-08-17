@@ -124,7 +124,9 @@ public class UserService implements UserServiceInterface {
         if (responseDTO.getCode() != 200) {
             return new ResponseDTO<>(404, "Task not found", null);
         }
-        user.addTask((Task) responseDTO.getDataObject());
+        TaskDTO taskDTO = (TaskDTO) responseDTO.getDataObject();
+        Task task = taskService.of(taskDTO);
+        user.addTask(task);
         return new ResponseDTO<>(200, "Task assigned successfully", null);
     }
 
@@ -172,9 +174,9 @@ public class UserService implements UserServiceInterface {
     }
 
 
-    public User of(UserDTO userDTO){
+    public User of(UserDTO userDTO) {
         return userRepository.findById(userDTO.getId());
-
+    }
     @Override
     public ResponseDTO getAllUserFromTaskId(int idTask) {
         if (!SessionContext.isAuthenticated()) {

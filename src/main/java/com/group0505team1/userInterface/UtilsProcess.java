@@ -1,14 +1,9 @@
 package com.group0505team1.userInterface;
 
-import ch.qos.logback.core.encoder.JsonEscapeUtil;
 import com.group0505team1.Utils.UserInputStatic;
 import com.group0505team1.auth.SessionContext;
 import com.group0505team1.dto.*;
-import com.group0505team1.entity.Project;
-import com.group0505team1.entity.Task;
-import com.group0505team1.entity.User;
 import com.group0505team1.service.*;
-
 
 import java.time.LocalDate;
 import java.util.List;
@@ -80,7 +75,6 @@ public class UtilsProcess {
         System.out.println("Total projects: " + projects.size());
     }
 
-
     public void createNewProjectProcess() {
         String title = UserInputStatic.inputText("Enter the title of the project: ");
         String description = UserInputStatic.inputText("Enter the description of the project: ");
@@ -88,7 +82,6 @@ public class UtilsProcess {
         ResponseDTO response = projectService.addProject(requestProjectDTO);
         System.out.println(response.getMessage());
     }
-
 
     public void assignUserToProjectProcess() {
         int idProject = UserInputStatic.inputInt("Enter the id of the project: ");
@@ -130,17 +123,6 @@ public class UtilsProcess {
             System.out.println(user.toString());
         }
     }
-
-
-   /* public void createNewUserProcess() {
-        String name = UserInputStatic.inputText("Enter the name of the user: ");
-        String login = UserInputStatic.inputText("Enter the login: ");
-        String password = UserInputStatic.inputText("Enter the password: ");
-        String confirmPassword = UserInputStatic.inputText("Confirm your password: ");
-        RequestRegisterDTO requestRegisterDTO = new RequestRegisterDTO(name, login, password, confirmPassword);
-        ResponseDTO response = userService.registerUser(requestRegisterDTO);
-        System.out.println(response.getMessage());
-    }*/
 
     public void showUserProfileProcess() {
         int userId = SessionContext.getCurrentUser().getId();
@@ -255,36 +237,35 @@ public class UtilsProcess {
             System.out.println("No users found for task with id: " + idTask);
             return;
         }
-        System.out.println("Users for the tasks with id " + idTask + ": " + users );
+        System.out.println("Users for the tasks with id " + idTask + ": ");
+        for (UserDTO u : users) {
+            System.out.println(u);
+        }
         System.out.println("Total users: " + users.size());
     }
 
-
-
-
-    public  void showCommonProjectStatistics(){
+    public void showCommonProjectStatistics() {
         System.out.println("Project statistics:");
         System.out.println("Total projects: " + statisticService.getProjectsTotalQuantity().getDataObject());
         System.out.println("Projects done: " + statisticService.getProjectsDoneQuantity().getDataObject());
         System.out.println("Projects in process: " + statisticService.getProjectsInProcessQuantity().getDataObject());
     }
 
-    public void showCommonTaskStatistics(){
+    public void showCommonTaskStatistics() {
         System.out.println("Task statistics:");
         System.out.println("Total tasks: " + statisticService.getTaskTotalQuantity().getDataObject());
         System.out.println("Tasks done: " + statisticService.getTaskDoneQuantity().getDataObject());
         System.out.println("Tasks in progress: " + statisticService.getTaskInProcessQuantity().getDataObject());
-        System.out.println("Tasks over time: " + statisticService.getTaskOverTimeQuantity());
+        System.out.println("Tasks over time: " + statisticService.getTaskOverTimeQuantity().getDataObject());
     }
-    public void showCommonUserStatistics(){
+
+    public void showCommonUserStatistics() {
         System.out.println("User statistics:");
         System.out.println("Total users : " + statisticService.getUserTotalQuantity().getDataObject());
         System.out.println("Users by task quantity: ");
         List<UserDTO> users = (List<UserDTO>) statisticService.getUsersByTasksQuantity().getDataObject();
-        for (UserDTO u : users){
-            System.out.println(u.getName() + "tasks : "+ u.getUserTasks().size());
+        for (UserDTO u : users) {
+            System.out.println(u.getName() + "tasks : " + u.getUserTasks().size());
         }
-
     }
-
 }
