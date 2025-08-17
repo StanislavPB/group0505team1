@@ -4,8 +4,13 @@ import com.group0505team1.entity.RoleUser;
 import com.group0505team1.entity.Task;
 import com.group0505team1.entity.User;
 
+import com.group0505team1.exception.UserNotFoundException;
+
+
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class UserRepository implements UserRepositoryInterface {
 
@@ -15,18 +20,22 @@ public class UserRepository implements UserRepositoryInterface {
         this.users = new ArrayList<>();
     }
 
+
     @Override
     public void add(User user) {
         users.add(user);
     }
 
     @Override
+
     public void addTask(User user, Task task) {
         user.addTask(task);
+
     }
 
     @Override
     public User findById(int id) {
+
         for (User user : users) {
             if (user.getId() == id) {
                 return user;
@@ -71,4 +80,5 @@ public class UserRepository implements UserRepositoryInterface {
     public List<User> findAll() {
         return new ArrayList<>(users);
     }
+
 }
