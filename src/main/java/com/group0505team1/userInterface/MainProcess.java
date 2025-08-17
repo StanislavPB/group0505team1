@@ -23,8 +23,8 @@ public class MainProcess {
                 case "P" -> projectsMenu();
                 case "T" -> tasksMenu();
                 case "U" -> usersMenu();
-//                case "M" -> messagesMenu();
-               case "S" -> statisticsMenu();
+                case "M" -> messagesMenu();
+                case "S" -> statisticsMenu();
                 case "0" -> isRunning = false;
                 default -> System.out.println("Invalid command!");
             }
@@ -140,8 +140,27 @@ public class MainProcess {
         System.out.println("1. Send message");
         System.out.println("2. Show my incoming messages");
         System.out.println("3. Show my outgoing messages");
-        System.out.println("1. Show all messages (Admin only)");
+        if (SessionContext.isAdmin()) {
+            System.out.println("4. Show all messages (Admin only)");
+        }
         System.out.println("0. Exit menu");
+    }
+
+    private void messagesMenu() {
+        boolean isRunning = true;
+        while (isRunning) {
+            showMessageMenu();
+            printSeparator();
+            String command = UserInputStatic.inputText("Enter the command:").toUpperCase();
+            switch (command) {
+                case "1" -> utilsProcess.sendMessageProcess();
+                case "2" -> utilsProcess.showIncomingMessages();
+                case "3" -> utilsProcess.showOutgoingMessages();
+                case "4" -> utilsProcess.showAllMessages();
+                case "0" -> isRunning = false;
+                default -> System.out.println("Invalid command!");
+            }
+        }
     }
 
     private void showStatisticMenu() {
@@ -166,6 +185,7 @@ public class MainProcess {
             }
         }
     }
+
     private void printSeparator() {
         System.out.println("----------------------------------------");
     }

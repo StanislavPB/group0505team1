@@ -268,4 +268,39 @@ public class UtilsProcess {
             System.out.println(u.getName() + "tasks : " + u.getUserTasks().size());
         }
     }
+
+    public void sendMessageProcess() {
+        System.out.println("[Send message]");
+        String text = UserInputStatic.inputText("Input message");
+        int id = UserInputStatic.inputInt("Input receiver id");
+        RequestMessageDTO messageDTO = new RequestMessageDTO(text,id);
+        messageService.sendMessage(messageDTO);
+    }
+
+    public void showIncomingMessages() {
+        System.out.println("[Show incoming messages]");
+       ResponseDTO allIncomingMessage = messageService.getReceivedMessages();
+       List<MessageDTO> list = (List<MessageDTO>) allIncomingMessage.getDataObject();
+       for (MessageDTO m : list){
+           System.out.println(m);
+       }
+    }
+
+    public void showOutgoingMessages() {
+        System.out.println("[Show outgoing messages]");
+        ResponseDTO allSentMessage = messageService.getSentMessages();
+        List<MessageDTO> list = (List<MessageDTO>) allSentMessage.getDataObject();
+        for (MessageDTO m : list){
+            System.out.println(m);
+        }
+    }
+
+    public void showAllMessages() {
+        System.out.println("[Show all messages (Admin)]");
+        ResponseDTO allMessage = messageService.getAllMessages();
+        List<MessageDTO> list = (List<MessageDTO>) allMessage.getDataObject();
+        for (MessageDTO m : list){
+            System.out.println(m);
+        }
+    }
 }
