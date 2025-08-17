@@ -53,4 +53,15 @@ public class UserDTO {
     public List<Task> getUserTasks() {
         return userTasks;
     }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", login='" + login + '\'' +
+                ", roleUser=" + roleUser +
+                ", userTasks=" + userTasks.size() +
+                '}';
+    }
 }

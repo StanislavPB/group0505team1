@@ -66,4 +66,17 @@ public class TaskDTO {
         }
         return taskDTOs;
     }
+
+    @Override
+    public String toString() {
+        return "TaskDTO{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", priority=" + priority +
+                ", deadline=" + deadline +
+                ", projectId=" + projectId +
+                '}';
+    }
 }
