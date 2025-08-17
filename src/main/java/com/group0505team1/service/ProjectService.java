@@ -20,14 +20,18 @@ public class ProjectService implements ProjectServiceInterface {
         this.userService = userService;
     }
 
+    private boolean isAuthenticated() {
+        return SessionContext.isAuthenticated();
+    }
+
+    private boolean isAdmin() {
+        return SessionContext.isAdmin();
+    }
+
     @Override
     public ResponseDTO addProject(RequestProjectDTO requestProjectDTO) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
 
         String name = requestProjectDTO.getTitle();
         String description = requestProjectDTO.getDescription();
@@ -45,49 +49,39 @@ public class ProjectService implements ProjectServiceInterface {
 
     @Override
     public ResponseDTO findById(int id) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+
         Project project = projectRepository.findByID(id);
         if (project == null) {
             return new ResponseDTO(400, "Project isn't exist!", null);
         }
-
         return new ResponseDTO<>(200, "Project found!", ProjectDTO.fromProject(project));
     }
 
     @Override
     public ResponseDTO findByName(String name) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+
         Project project = projectRepository.findByName(name);
         if (project == null) {
             return new ResponseDTO(400, "Project isn't exist!", null);
         }
-
         return new ResponseDTO<>(200, "Project found!", ProjectDTO.fromProject(project));
-
     }
 
     @Override
     public ResponseDTO getAllProjects() {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         List<Project> projects = projectRepository.getAllProject();
         return new ResponseDTO<>(200, "Projects found!", ProjectDTO.fromProjectList(projects));
-
     }
 
     @Override
     public ResponseDTO getMyProjects() {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+
         User user = SessionContext.getCurrentUser();
         List<Project> projects = projectRepository.getAllProject();
         projects.removeIf(project -> !project.getUsers().contains(user));
@@ -96,12 +90,9 @@ public class ProjectService implements ProjectServiceInterface {
 
     @Override
     public ResponseDTO addUserToProject(int projectId, int userId) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         Project project = projectRepository.findByID(projectId);
         if (project == null) {
             return new ResponseDTO(404, "Project not found", null);
@@ -121,12 +112,9 @@ public class ProjectService implements ProjectServiceInterface {
 
     @Override
     public ResponseDTO addTaskToProject(int projectId, int taskId) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         Project project = projectRepository.findByID(projectId);
         if (project == null) {
             return new ResponseDTO(404, "Project not found", null);
@@ -147,12 +135,9 @@ public class ProjectService implements ProjectServiceInterface {
 
     @Override
     public ResponseDTO getUsersByProject(int projectId) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         Project project = projectRepository.findByID(projectId);
         if (project == null) {
             return new ResponseDTO(404, "Project not found", null);
@@ -163,12 +148,9 @@ public class ProjectService implements ProjectServiceInterface {
 
     @Override
     public ResponseDTO getTaskByProject(int projectId) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         Project project = projectRepository.findByID(projectId);
         if (project == null) {
             return new ResponseDTO(404, "Project not found", null);

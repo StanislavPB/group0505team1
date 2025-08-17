@@ -24,6 +24,13 @@ public class UserService implements UserServiceInterface {
         this.userSecurity = userSecurity;
     }
 
+    private boolean isAuthenticated() {
+        return SessionContext.isAuthenticated();
+    }
+    private boolean isAdmin() {
+        return SessionContext.isAdmin();
+    }
+
     @Override
     public ResponseDTO registerUser(RequestRegisterDTO requestRegisterDTO) {
         String name = requestRegisterDTO.getName();
@@ -62,9 +69,8 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public ResponseDTO getUserById(int id) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+
         User user = userRepository.findById(id);
         if (user == null) {
             return new ResponseDTO(404, "User not found", null);
@@ -74,9 +80,8 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public ResponseDTO getUserByLogin(String login) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+
         User user = userRepository.findByLogin(login);
         if (user == null) {
             return new ResponseDTO<>(404, "User not found", null);
@@ -86,9 +91,8 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public ResponseDTO getUsersByName(String name) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+
         List<User> users = userRepository.findByName(name);
         if (users.isEmpty()) {
             return new ResponseDTO<>(404, "Users not found", null);
@@ -98,9 +102,8 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public ResponseDTO getAllUsers() {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+
         List<User> users = userRepository.findAll();
         if (users.isEmpty()) {
             return new ResponseDTO<>(404, "Users not found", null);
@@ -110,12 +113,9 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public ResponseDTO assignTaskToUser(int idTask, int idUser) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO<>(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         User user = userRepository.findById(idUser);
         if (user == null) {
             return new ResponseDTO<>(404, "User not found", null);
@@ -132,12 +132,9 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public ResponseDTO getTasksByUserId(int idUser) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO<>(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         User user = userRepository.findById(idUser);
         if (user == null) {
             return new ResponseDTO<>(404, "User not found", null);
@@ -147,21 +144,17 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public ResponseDTO getMyTasks() {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+
         User user = SessionContext.getCurrentUser();
         return new ResponseDTO(200, "Tasks found", TaskDTO.fromTaskList(user.getUserTasks()));
     }
 
     @Override
     public ResponseDTO setUserRole(int idUser, String role) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO<>(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         if (Arrays.stream(RoleUser.values()).noneMatch(r -> r.name().equals(role))) {
             return new ResponseDTO<>(400, "Invalid role", null);
         }
@@ -184,12 +177,9 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public ResponseDTO getAllUserFromTaskId(int idTask) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO<>(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         List<User> allUser = userRepository.findAll();
         List<User> filterByUser = new ArrayList<>();
         for (User filterUser : allUser) {

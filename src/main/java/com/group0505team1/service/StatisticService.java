@@ -36,7 +36,6 @@ public class StatisticService implements StatisticServiceInterface {
         return SessionContext.isAuthenticated();
     }
 
-
     @Override
     public ResponseDTO getProjectsTotalQuantity() {
         if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);

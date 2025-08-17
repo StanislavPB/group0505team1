@@ -61,7 +61,6 @@ public class TaskRepository implements TaskRepositoryInterface {
         task.setDeadline(deadline);
     }
 
-
     @Override
     public void assignTaskToProject(Task task, int projectId) {
          task.setProjectId(projectId);

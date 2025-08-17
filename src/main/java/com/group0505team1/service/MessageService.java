@@ -27,10 +27,13 @@ public class MessageService implements MessageServiceInterface {
         return SessionContext.isAuthenticated();
     }
 
+    private boolean isAdmin() {
+        return SessionContext.isAdmin();
+    }
+
     public ResponseDTO sendMessage(RequestMessageDTO requestMessageDTO) {
-        if (!isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+
         User sender = SessionContext.getCurrentUser();
         ResponseDTO receiver = userService.getUserById(requestMessageDTO.getUserIdReceiver());
 
@@ -40,7 +43,6 @@ public class MessageService implements MessageServiceInterface {
 
         if (receiver == null) {
             return new ResponseDTO<>(404, "User not found", null);
-
         }
         User userReceiver = userService.of(requestMessageDTO);
         messageRepositoryInterface.sendMessage(sender, userReceiver, requestMessageDTO.getMessage());
@@ -48,35 +50,26 @@ public class MessageService implements MessageServiceInterface {
     }
 
     public ResponseDTO getReceivedMessages() {
-        if (!isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+
         User user = SessionContext.getCurrentUser();
         List<Message> incomingMessages = messageRepositoryInterface.getReceivedMessages(user);
-
         return new ResponseDTO<>(200, "Messages found", MessageDTO.fromMessageList(incomingMessages));
     }
 
     public ResponseDTO getSentMessages() {
-        if (!isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+
         User user = SessionContext.getCurrentUser();
         List<Message> sentMessages = messageRepositoryInterface.getSentMessages(user);
-
         return new ResponseDTO<>(200, "Messages found", MessageDTO.fromMessageList(sentMessages));
-
     }
 
     public ResponseDTO getAllMessages() {
-        if (!isAuthenticated()) {
-            return new ResponseDTO<>(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO<>(403, "Access denied. Admin rights are required", null);
-        }
-        List<Message> messages = messageRepositoryInterface.getAllMessages();
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
 
+        List<Message> messages = messageRepositoryInterface.getAllMessages();
         return new ResponseDTO<>(200, "Messages found", MessageDTO.fromMessageList(messages));
     }
 

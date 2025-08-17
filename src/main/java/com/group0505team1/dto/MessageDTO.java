@@ -40,9 +40,7 @@ public class MessageDTO {
         return message;
     }
 
-    public int getUserIdSender() {
-        return userIdSender;
-    }
+    public int getUserIdSender() {return userIdSender;}
 
     public int getUserIdReceiver() {
         return userIdReceiver;

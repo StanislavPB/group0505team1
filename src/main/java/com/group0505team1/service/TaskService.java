@@ -25,14 +25,18 @@ public class TaskService implements TaskServiceInterface{
         this.userSecurity = userSecurity;
     }
 
+    private boolean isAuthenticated() {
+        return SessionContext.isAuthenticated();
+    }
+    private boolean isAdmin() {
+        return SessionContext.isAdmin();
+    }
+
     @Override
     public ResponseDTO addTask(RequestTaskDTO requestTaskDTO) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         Task task = new Task(requestTaskDTO.getTitle(),
                 requestTaskDTO.getDescription(),
                 requestTaskDTO.getStatus(),
@@ -47,22 +51,17 @@ public class TaskService implements TaskServiceInterface{
 
     @Override
     public ResponseDTO findAllTasks() {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
-        }
-        List<Task> tasks = taskRepositoryInterface.findAll();
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
 
+        List<Task> tasks = taskRepositoryInterface.findAll();
         return new ResponseDTO(200, "Successfully found all tasks", TaskDTO.fromTaskList(tasks));
     }
 
     @Override
     public ResponseDTO findTaskById(int taskId) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+
         Task task = taskRepositoryInterface.findById(taskId);
         if (task == null) {
             return new ResponseDTO(404, "Task not found", null);
@@ -72,9 +71,7 @@ public class TaskService implements TaskServiceInterface{
 
     @Override
     public ResponseDTO findTaskByFilter(Boolean active, TaskPriority priority) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
         List<Task> tasks = taskRepositoryInterface.findByFilter(active, priority);
         if (tasks.isEmpty()) {
             return new ResponseDTO(404, "Task not found", null);
@@ -84,12 +81,9 @@ public class TaskService implements TaskServiceInterface{
 
     @Override
     public ResponseDTO setTaskStatus(int taskId, String taskStatus) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         Task task = taskRepositoryInterface.findById(taskId);
         if (task == null) {
             return new ResponseDTO(404, "Task not found", null);
@@ -103,12 +97,9 @@ public class TaskService implements TaskServiceInterface{
 
     @Override
     public ResponseDTO setTaskPriority(int taskId, String taskPriority) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         Task task = taskRepositoryInterface.findById(taskId);
         if (task == null) {
             return new ResponseDTO(404, "Task not found", null);
@@ -124,12 +115,9 @@ public class TaskService implements TaskServiceInterface{
 
     @Override
     public ResponseDTO setDeadline(int taskId, String deadline) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         Task task = taskRepositoryInterface.findById(taskId);
         if (task == null) {
             return new ResponseDTO(404, "Task not found", null);
@@ -149,12 +137,9 @@ public class TaskService implements TaskServiceInterface{
 
     @Override
     public ResponseDTO assignTaskToProject(int taskId, int projectId) {
-        if (!SessionContext.isAuthenticated()) {
-            return new ResponseDTO(401, "Authentication required", null);
-        }
-        if (!SessionContext.isAdmin()) {
-            return new ResponseDTO(403, "Access denied. Admin rights are required", null);
-        }
+        if (!isAuthenticated()) return new ResponseDTO(401, "Authentication required", null);
+        if (!isAdmin()) return new ResponseDTO(403, "Access denied. Admin rights are required", null);
+
         Task task = taskRepositoryInterface.findById(taskId);
         if (task == null) {
             return new ResponseDTO(404, "Task not found", null);
