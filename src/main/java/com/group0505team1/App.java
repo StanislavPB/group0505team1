@@ -23,7 +23,8 @@ public class App {
         ProjectService projectService = new ProjectService(projectRepository, taskService, userService);
         taskService.setProjectService(projectService);
         MessageService messageService = new MessageService(messageRepository, userSecurity, userService);
-        UtilsProcess utilsProcess = new UtilsProcess(userService, taskService, projectService, messageService);
+        StatisticServiceInterface statisticService = new StatisticService(userService, taskService, projectService);
+        UtilsProcess utilsProcess = new UtilsProcess(userService, taskService, projectService, messageService, statisticService);
         MainProcess mainProcess = new MainProcess(utilsProcess);
 
         userService.registerUser(new RequestRegisterDTO("Administrator", "admin", "passAdmin", "passAdmin"));

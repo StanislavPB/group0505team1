@@ -3,10 +3,7 @@ package com.group0505team1.userInterface;
 import com.group0505team1.Utils.UserInputStatic;
 import com.group0505team1.dto.*;
 import com.group0505team1.entity.Project;
-import com.group0505team1.service.MessageService;
-import com.group0505team1.service.ProjectService;
-import com.group0505team1.service.TaskService;
-import com.group0505team1.service.UserService;
+import com.group0505team1.service.*;
 
 import java.util.List;
 
@@ -15,12 +12,14 @@ public class UtilsProcess {
     private final TaskService taskService;
     private final ProjectService projectService;
     private final MessageService messageService;
+    private final StatisticServiceInterface statisticService;
 
-    public UtilsProcess(UserService userService, TaskService taskService, ProjectService projectService, MessageService messageService) {
+    public UtilsProcess(UserService userService, TaskService taskService, ProjectService projectService, MessageService messageService, StatisticServiceInterface statisticService) {
         this.userService = userService;
         this.taskService = taskService;
         this.projectService = projectService;
         this.messageService = messageService;
+        this.statisticService = statisticService;
     }
 
 
