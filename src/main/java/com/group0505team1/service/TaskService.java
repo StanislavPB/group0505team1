@@ -58,7 +58,7 @@ public class TaskService implements TaskServiceInterface{
 
     @Override
     public ResponseDTO findTaskById(int taskId) {
-        if (SessionContext.isAuthenticated()) {
+        if (!SessionContext.isAuthenticated()) {
             return new ResponseDTO(401, "Authentication required", null);
         }
         Task task = taskRepositoryInterface.findById(taskId);
