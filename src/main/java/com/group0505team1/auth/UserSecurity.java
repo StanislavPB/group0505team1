@@ -13,7 +13,7 @@ public class UserSecurity {
     }
 
     public User authenticate(String login, String password) {
-        if(SessionContext.isAuthenticated()){
+        if (SessionContext.isAuthenticated()) {
             throw new AuthenticationException("User already authenticated");
         }
         User user = userRepository.findByLogin(login);
@@ -29,16 +29,16 @@ public class UserSecurity {
     }
 
     public User register(String name, String login, String password, String passwordConfirm) {
-        if(name == null || name.isBlank()){
+        if (name == null || name.isBlank()) {
             throw new AuthenticationException("Name is required");
         }
-        if(login == null || login.isBlank() || login.length() < 4 || login.length() > 10){
+        if (login == null || login.isBlank() || login.length() < 4 || login.length() > 10) {
             throw new AuthenticationException("Login is required or not in criteria");
         }
-        if(password == null || password.isBlank() || password.length() < 5 || password.length() > 10){
+        if (password == null || password.isBlank() || password.length() < 5 || password.length() > 10) {
             throw new AuthenticationException("Password is required or not in criteria");
         }
-        if(!password.equals(passwordConfirm)){
+        if (!password.equals(passwordConfirm)) {
             throw new AuthenticationException("Passwords do not match");
         }
         String passwordHash = PasswordUtil.hashPassword(password);
@@ -47,7 +47,7 @@ public class UserSecurity {
         return user;
     }
 
-    public void logout(){
+    public void logout() {
         if (!SessionContext.isAuthenticated()) {
             throw new AuthenticationException("User is not authenticated");
         }
